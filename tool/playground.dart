@@ -1,3 +1,4 @@
+import 'package:gallerist/data/cleveland_artwork_repository.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:gallerist/models/artwork.dart';
@@ -17,10 +18,12 @@ const sample = r'''
 
 
 Future<void> main() async {
-  final api = ClevelandApi();
-  final art = await api.fetchArtwork(135382);
-  print(art.title);
-  print(art.artistName);
-  print(art.dateDisplay);
-  print(art.imageUrl);
+  final repository = ClevelandArtworkRepository(ClevelandApi());
+  final today = DateTime.now();
+
+  for (var i = 0; i < 7; i++) {
+    final day = DateTime(today.year, today.month, today.day + i);
+    final art = await repository.artworkForDay(day);
+    print('${day.day}/${day.month}: ${art.title}');
+  }
 }
