@@ -25,10 +25,16 @@ class GalleristApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final seed = context.select<TodayController, Color?>(
+      (controller) => controller.seedColor,
+    );
+    
     return MaterialApp(
       title:'Gallerist',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.build(seed ?? AppTheme.fallbackSeed),
+      themeAnimationDuration: const Duration(milliseconds: 900),
+      themeAnimationCurve: Curves.easeInOutCubic,
       home: TodayScreen(),
     );
   }

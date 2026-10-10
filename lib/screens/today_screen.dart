@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import 'package:gallerist/theme/app_theme.dart';
+import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/state/today_controller.dart';
 
@@ -63,6 +64,7 @@ class _ArtworkView extends StatelessWidget {
     final maxImageHeight = MediaQuery.sizeOf(context).height * 0.55;
     final artistName = artwork.artistName;
     final dateDisplay = artwork.dateDisplay;
+    final palette = context.palette;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 48),
@@ -76,13 +78,13 @@ class _ArtworkView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 32),
-        Text(artwork.title, style: AppText.title),
+        Text(artwork.title, style: AppText.title(palette)),
         const SizedBox(height: 16),
-        if (artistName != null) Text(artistName, style: AppText.artist),
+        if (artistName != null) Text(artistName, style: AppText.artist(palette)),
         if (dateDisplay != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
-            child: Text(dateDisplay, style: AppText.detail),
+            child: Text(dateDisplay, style: AppText.detail(palette)),
           ),
       ],
     );
@@ -94,15 +96,16 @@ class _Masthead extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text('Gallerist', style: AppText.wordmark),
+        Text('Gallerist', style: AppText.wordmark((palette))),
         const Spacer(),
         Text(
           DateFormat('EEEE d MMMM').format(DateTime.now()),
-          style: AppText.date,
+          style: AppText.date((palette)),
         ),
       ],
     );

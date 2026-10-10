@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
@@ -15,27 +15,44 @@ class TodayController extends ChangeNotifier {
   LoadStatus _status = LoadStatus.loading;
   Artwork? _artwork;
   String? _errorMessage;
+  Color? _seedColor;
 
+  Color? get seedColor => _seedColor;
   LoadStatus get status => _status;
   Artwork? get artwork => _artwork;
   String? get errorMessage => _errorMessage;
 
   Future<void> load() async {
-    debugPrint('load() started');
     _status = LoadStatus.loading;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _artwork = await _repository.artworkForDay(DateTime.now());
+      final artwork = await _repository.artworkForDay(DateTime.now());
+      _artwork = artwork;
       _status = LoadStatus.ready;
+      notifyListeners();
+
+      _seedColor = await _colorFrom(artwork);
     } catch (e) {
-      debugPrint('Loading failed: $e');
       _errorMessage = 'Couldn\'t reach the museum. '
           'Check your connection and try again.';
       _status = LoadStatus.error;
     }
 
     notifyListeners();
+  }
+
+  Future<Color?> _colorFrom(Artwork artwork) async {
+    try {
+      final scheme = await ColorScheme.fromImageProvider(
+        provider: NetworkImage(artwork.imageUrl),
+        dynamicSchemeVariant: DynamicSchemeVariant.fidelity
+      );
+      return scheme.primary;
+    } catch (e) {
+      debugPrint('Could not read the painting\'s colors: $e');
+      return null;
+    }
   }
 }

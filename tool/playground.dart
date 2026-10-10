@@ -1,7 +1,4 @@
 import 'package:gallerist/data/cleveland_artwork_repository.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/data/cleveland_api.dart';
 
 
