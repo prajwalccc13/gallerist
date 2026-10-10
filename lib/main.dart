@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:gallerist/theme/app_theme.dart';
 
 import 'package:gallerist/data/cleveland_api.dart';
 import 'package:gallerist/data/cleveland_artwork_repository.dart';
@@ -24,7 +25,10 @@ class GalleristApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title:'Gallerist',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
       home: TodayScreen(),
     );
   }
