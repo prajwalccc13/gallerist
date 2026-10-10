@@ -1,86 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:gallerist/data/cleveland_api.dart';
+import 'package:provider/provider.dart';
 
 import 'package:gallerist/models/artwork.dart';
+import 'package:gallerist/state/today_controller.dart';
 
-class TodayScreen extends StatefulWidget {
+
+class TodayScreen extends StatelessWidget {
   const TodayScreen({super.key});
-
+ 
   @override
-  State<TodayScreen> createState() => _TodayScreenState();
+  Widget build(BuildContext context) {
+    final controller = context.watch<TodayController>();
+    return Scaffold(
+      body: SafeArea(
+        child: switch (controller.status) {
+          LoadStatus.loading => 
+            const Center(child: CircularProgressIndicator()),
+          LoadStatus.error => _ErrorView(
+            message: controller.errorMessage ?? '', 
+            onRetry: controller.load,
+          ),
+          LoadStatus.ready => _ArtworkView(artwork: controller.artwork!),
+        }
+        
+      )
+    );
+  }
 }
 
-class _TodayScreenState extends State<TodayScreen> {
-  final _api = ClevelandApi();
 
-  bool _isLoading = true;
-  Artwork? _artwork;
-  String? _error;
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.message, required this.onRetry});
 
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    try {
-      final artwork = await _api.fetchArtwork(135382);
-      if (!mounted) return;
-      setState(() {
-        _artwork = artwork;
-        _isLoading = false;
-      });
-    } catch (e) {
-      debugPrint('Loading failed: $e');
-      if (!mounted) return;
-      setState(() {
-        _error =
-            'Couldn\'t reach the museum. '
-            'Check your connection and try again.';
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _retry() {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-    _load();
-  }
+  final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: _buildBody()));
-  }
-
-  Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    // Show Error
-    final error = _error;
-    if (error != null) {
-      return Center(
+    return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(error, textAlign: TextAlign.center),
+              Text(message, textAlign: TextAlign.center),
               const SizedBox(height: 16),
-              TextButton(onPressed: _retry, child: const Text('Try again')),
+              TextButton(onPressed: onRetry, child: const Text('Try again')),
             ],
           ),
         ),
       );
-    }
+  }
+}
 
-    // Show Artwork
-    final artwork = _artwork!;
+class _ArtworkView extends StatelessWidget {
+  const _ArtworkView({required this.artwork});
+
+  final Artwork artwork;
+
+  @override
+  Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [

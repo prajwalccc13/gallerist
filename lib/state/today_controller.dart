@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:gallerist/data/cleveland_api.dart';
+import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
 
 
@@ -8,9 +8,9 @@ enum LoadStatus { loading, ready, error }
 
 
 class TodayController extends ChangeNotifier {
-  TodayController(this._api);
+  TodayController(this._repository);
 
-  final ClevelandApi _api;
+  final ArtworkRepository _repository;
 
   LoadStatus _status = LoadStatus.loading;
   Artwork? _artwork;
@@ -21,12 +21,13 @@ class TodayController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> load() async {
+    debugPrint('load() started');
     _status = LoadStatus.loading;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      _artwork = await _api.fetchArtwork(135382);
+      _artwork = await _repository.artworkForDay(DateTime.now());
       _status = LoadStatus.ready;
     } catch (e) {
       debugPrint('Loading failed: $e');

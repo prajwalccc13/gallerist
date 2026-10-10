@@ -12,9 +12,9 @@ class ClevelandApi {
       '/api/artworks/$id',
     );
 
-    final response = await http.get(
-      url
-    );
+    final response = await http
+    .get(url)
+    .timeout(const Duration(seconds: 15));
 
     if (response.statusCode != 200) {
       throw Exception('The museum answered ${response.statusCode}');
