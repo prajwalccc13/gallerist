@@ -71,7 +71,7 @@ class Artwork {
       if (artistDisplay != null) {'description': artistDisplay},
     ],
     'images': {
-      'web': {'url': imageUrl},
+      'web': {'url': imageUrl, 'width': imageWidth, 'height': imageHeight},
     },
     'technique': technique,
     'description': description,
@@ -88,12 +88,12 @@ class Artwork {
     if (html == null) return null;
 
     final text = html
-      .replaceAll(RegExp(r'<[^>]+>'), '')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&#39;', "'")
-      .replaceAll('&nbsp;', ' ')
-      .trim();
+        .replaceAll(RegExp(r'<[^>]+>'), '')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#39;', "'")
+        .replaceAll('&nbsp;', ' ')
+        .trim();
 
     return text.isEmpty ? null : text;
   }
