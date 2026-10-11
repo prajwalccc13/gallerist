@@ -17,23 +17,28 @@ class TodayScreen extends StatelessWidget {
     final controller = context.watch<TodayController>();
     return Scaffold(
       body: SafeArea(
-        child: switch (controller.status) {
-          LoadStatus.loading => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          LoadStatus.error => _ErrorView(
-            message: controller.errorMessage ?? '',
-            onRetry: controller.load,
-          ),
-          LoadStatus.ready => _ArtworkView(artwork: controller.artwork!),
-        },
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: switch (controller.status) {
+            LoadStatus.loading => const _LoadingView(key: ValueKey('loading')),
+            LoadStatus.error => _ErrorView(
+              key: const ValueKey('error'),
+              message: controller.errorMessage ?? '',
+              onRetry: controller.load,
+            ),
+            LoadStatus.ready => _ArtworkView(
+              key: ValueKey(controller.artwork!.id),
+              artwork: controller.artwork!,
+            ),
+          },
+        ),
       ),
     );
   }
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const _ErrorView({super.key, required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
@@ -57,7 +62,7 @@ class _ErrorView extends StatelessWidget {
 }
 
 class _ArtworkView extends StatelessWidget {
-  const _ArtworkView({required this.artwork});
+  const _ArtworkView({super.key, required this.artwork});
 
   final Artwork artwork;
 
@@ -69,6 +74,34 @@ class _ArtworkView extends StatelessWidget {
     final palette = context.palette;
     final description = artwork.description;
     final didYouKnow = artwork.didYouKnow;
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
+    final details = <Widget>[
+      Text(artwork.title, style: AppText.title(palette)),
+      const SizedBox(height: 16),
+      if (artistName != null) Text(artistName, style: AppText.artist(palette)),
+      const SizedBox(height: 32),
+      WallLabel(
+        entries: {'Date': dateDisplay, 'Medium': artwork.techniqueDisplay},
+      ),
+      if (description != null) ...[
+        const SizedBox(height: 24),
+        Text('About this work', style: AppText.sectionTitle(palette)),
+        const SizedBox(height: 12),
+        Text(description, style: AppText.body(palette)),
+      ],
+      if (didYouKnow != null) ...[
+        const SizedBox(height: 28),
+        Text('Did you know?', style: AppText.sectionTitle(palette)),
+        const SizedBox(height: 12),
+        Text(didYouKnow, style: AppText.body(palette)),
+      ],
+      const SizedBox(height: 40),
+      Text(
+        'Image and text courtesy of the Cleveland Museum of Art.',
+        style: AppText.caption(palette),
+      ),
+    ];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 48),
@@ -77,31 +110,17 @@ class _ArtworkView extends StatelessWidget {
         const SizedBox(height: 32),
         _FramedArtwork(artwork: artwork, maxHeight: maxImageHeight),
         const SizedBox(height: 32),
-        Text(artwork.title, style: AppText.title(palette)),
-        const SizedBox(height: 16),
-        if (artistName != null)
-          Text(artistName, style: AppText.artist(palette)),
-        const SizedBox(height: 32),
-        WallLabel(
-          entries: {'Date': dateDisplay, 'Medium': artwork.techniqueDisplay},
-        ),
-        if (description != null) ...[
-          const SizedBox(height: 24),
-          Text('About this work', style: AppText.sectionTitle(palette)),
-          const SizedBox(height: 12),
-          Text(description, style: AppText.body(palette)),
-        ],
-        if (didYouKnow != null) ...[
-          const SizedBox(height: 28),
-          Text('Did you know?', style: AppText.sectionTitle(palette)),
-          const SizedBox(height: 12),
-          Text(didYouKnow, style: AppText.body(palette)),
-        ],
-        const SizedBox(height: 40),
-        Text(
-          'Image and text courtesy of the Cleveland Museum of Art.',
-          style: AppText.caption(palette),
-        ),
+        ...(reduceMotion
+          ? details
+          : details
+            .animate(interval: 60.ms)
+            .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+            .slideY(
+              begin: 0.08,
+              end: 0,
+              duration: 500.ms,
+              curve: Curves.easeOutCubic,
+            )),
       ],
     );
   }
@@ -180,6 +199,37 @@ class _FramedArtwork extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _LoadingView extends StatelessWidget {
+  const _LoadingView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
+    final wordmark = Text(
+      'Gallerist',
+      style: AppText.wordmark(palette).copyWith(fontSize: 44),
+    );
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (reduceMotion)
+            wordmark
+          else
+            wordmark
+                .animate(onPlay: (c) => c.repeat(reverse: true))
+                .fade(begin: 0.35, end: 1, duration: 1200.ms),
+          const SizedBox(height: 12),
+          Text('Finding today\'s painting', style: AppText.caption(palette)),
+        ],
       ),
     );
   }
