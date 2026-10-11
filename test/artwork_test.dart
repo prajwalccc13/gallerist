@@ -27,6 +27,7 @@ void main() {
       expect(art.id, 135382);
       expect(art.title, 'The Red Kerchief');
       expect(art.imageUrl, 'https://example.com/red-kerchief.jpg');
+      expect(art.dateDisplay, 'c. 1868–73');
     });
 
     test('cuts the artist name out of the description', () {

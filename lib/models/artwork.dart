@@ -54,7 +54,7 @@ class Artwork {
       title: (json['title'] as String?) ?? 'Untitled',
       imageUrl: webImage['url'] as String,
       artistDisplay: firstCreator?['description'] as String?,
-      dateDisplay: json['date_display'] as String?,
+      dateDisplay: json['creation_date'] as String?,
       imageWidth: _toDouble(webImage['width']),
       imageHeight: _toDouble(webImage['height']),
       technique: json['technique'] as String?,
