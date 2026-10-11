@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:ui' show Color;
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 
+import 'package:gallerist/data/artwork_colors.dart';
 import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
 
@@ -10,9 +11,10 @@ enum LoadStatus { loading, ready, error }
 
 
 class TodayController extends ChangeNotifier {
-  TodayController(this._repository);
+  TodayController(this._repository, this._colors);
 
   final ArtworkRepository _repository;
+  final ArtworkColors _colors;
 
   LoadStatus _status = LoadStatus.loading;
   Artwork? _artwork;
@@ -35,7 +37,7 @@ class TodayController extends ChangeNotifier {
       _status = LoadStatus.ready;
       notifyListeners();
 
-      _seedColor = await _colorFrom(artwork);
+      _seedColor = await _colors.seedFor(artwork);
     } catch (e) {
       _errorMessage = 'Couldn\'t reach the museum. '
           'Check your connection and try again.';
@@ -43,18 +45,5 @@ class TodayController extends ChangeNotifier {
     }
 
     notifyListeners();
-  }
-
-  Future<Color?> _colorFrom(Artwork artwork) async {
-    try {
-      final scheme = await ColorScheme.fromImageProvider(
-        provider: CachedNetworkImageProvider(artwork.imageUrl),
-        dynamicSchemeVariant: DynamicSchemeVariant.fidelity
-      );
-      return scheme.primary;
-    } catch (e) {
-      debugPrint('Could not read the painting\'s colors: $e');
-      return null;
-    }
   }
 }

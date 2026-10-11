@@ -4,6 +4,7 @@ import 'package:gallerist/theme/app_theme.dart';
 
 import 'package:gallerist/data/cleveland_api.dart';
 import 'package:gallerist/data/cleveland_artwork_repository.dart';
+import 'package:gallerist/data/artwork_colors.dart';
 import 'package:gallerist/screens/today_screen.dart';
 import 'package:gallerist/state/today_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,10 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   runApp(
     ChangeNotifierProvider(
-      create: (_) => TodayController(ClevelandArtworkRepository(ClevelandApi(), prefs))..load(),
+      create: (_) => TodayController(
+        ClevelandArtworkRepository(ClevelandApi(), prefs),
+        ImageArtworkColors(),
+        )..load(),
       child: const GalleristApp(),
     ),
   );
