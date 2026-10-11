@@ -31,7 +31,7 @@ class ClevelandApi {
         'cc0': '1',
         'highlight': '1',
         'limit': '200',
-        'fields': 'id,title,creators,creation_date,images',
+        'fields': 'id,title,creators,creation_date,images,technique,description,did_you_know',
       }
     );
 

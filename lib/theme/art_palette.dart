@@ -8,12 +8,14 @@ class ArtPalette extends ThemeExtension<ArtPalette> {
     required this.ink,
     required this.muted,
     required this.accent,
+    required this.glow,
   });
 
   final Color wall;
   final Color ink;
   final Color muted;
   final Color accent;
+  final Color glow;
 
   factory ArtPalette.fromSeed(Color seed) {
     final source = HSLColor.fromColor(seed);
@@ -32,6 +34,7 @@ class ArtPalette extends ThemeExtension<ArtPalette> {
       ink: tone(math.min(sat, 0.35), 0.13),
       muted: tone(math.min(sat, 0.20), 0.40),
       accent: tone(sat.clamp(0.35, 0.75), 0.40),
+      glow: tone(sat.clamp(0.30, 0.80), 0.50),
     );
   }
 
@@ -41,12 +44,14 @@ class ArtPalette extends ThemeExtension<ArtPalette> {
     Color? ink,
     Color? muted,
     Color? accent,
+    Color? glow,
   }) {
     return ArtPalette(
       wall: wall ?? this.wall,
       ink: ink ?? this.ink,
       muted: muted ?? this.muted,
       accent: accent ?? this.accent,
+      glow: glow ?? this.glow,
     );
   }
 
@@ -58,6 +63,7 @@ class ArtPalette extends ThemeExtension<ArtPalette> {
       ink: Color.lerp(ink, other.ink, t)!,
       muted: Color.lerp(muted, other.muted, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
+      glow: Color.lerp(glow, other.glow, t)!,
     );
   }
 } 

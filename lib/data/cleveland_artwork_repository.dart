@@ -13,8 +13,8 @@ class ClevelandArtworkRepository extends ArtworkRepository {
   final SharedPreferences _prefs;
   List<Artwork>? _paintings;
 
-  static const _paintingsKey = 'paintings_v1';
-  static const _savedAtKey = 'paintings_saved_at_v1';
+  static const _paintingsKey = 'paintings_v3';
+  static const _savedAtKey = 'paintings_saved_at_v3';
   static const _maxAge = Duration(days: 30);
 
   @override
