@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
 
@@ -46,7 +48,7 @@ class TodayController extends ChangeNotifier {
   Future<Color?> _colorFrom(Artwork artwork) async {
     try {
       final scheme = await ColorScheme.fromImageProvider(
-        provider: NetworkImage(artwork.imageUrl),
+        provider: CachedNetworkImageProvider(artwork.imageUrl),
         dynamicSchemeVariant: DynamicSchemeVariant.fidelity
       );
       return scheme.primary;

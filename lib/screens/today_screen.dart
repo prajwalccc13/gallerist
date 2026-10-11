@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -181,20 +182,13 @@ class _FramedArtwork extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(2),
-              child: Image.network(
-                artwork.imageUrl,
+              child: CachedNetworkImage(
+                imageUrl: artwork.imageUrl,
                 fit: BoxFit.cover,
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                  if (wasSynchronouslyLoaded) return child;
-                  return AnimatedOpacity(
-                    opacity: frame == null ? 0 : 1,
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOut,
-                    child: child,
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) =>
-                    const SizedBox.shrink(),
+                fadeInDuration: const Duration(milliseconds: 600),
+                fadeInCurve: Curves.easeOut,
+                placeholder: (context, url) => const SizedBox.shrink(),
+                errorWidget: (context, url, error) => const SizedBox.shrink(),
               ),
             ),
           ),
