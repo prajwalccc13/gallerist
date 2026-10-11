@@ -9,6 +9,7 @@ import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/state/today_controller.dart';
 import 'package:gallerist/widgets/wall_label.dart';
+import 'package:gallerist/screens/viewer_screen.dart';
 
 class TodayScreen extends StatelessWidget {
   const TodayScreen({super.key});
@@ -180,15 +181,26 @@ class _FramedArtwork extends StatelessWidget {
                 ),
               ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: CachedNetworkImage(
-                imageUrl: artwork.imageUrl,
-                fit: BoxFit.cover,
-                fadeInDuration: const Duration(milliseconds: 600),
-                fadeInCurve: Curves.easeOut,
-                placeholder: (context, url) => const SizedBox.shrink(),
-                errorWidget: (context, url, error) => const SizedBox.shrink(),
+            child: Semantics(
+              button: true,
+              label: 'View ${artwork.title} full screen',
+              child: GestureDetector(
+                onTap: () =>
+                      Navigator.of(context).push(ViewerScreen.route(artwork)),
+                child: Hero(
+                  tag: artwork.heroTag,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: CachedNetworkImage(
+                      imageUrl: artwork.imageUrl,
+                      fit: BoxFit.cover,
+                      fadeInDuration: const Duration(milliseconds: 600),
+                      fadeInCurve: Curves.easeOut,
+                      placeholder: (context, url) => const SizedBox.shrink(),
+                      errorWidget: (context, url, error) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

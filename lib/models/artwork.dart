@@ -25,6 +25,8 @@ class Artwork {
 
   String? get artistName => artistDisplay?.split(' (').first;
 
+  String get heroTag => 'artwork-$id';
+
   double get aspectRatio {
     final w = imageWidth;
     final h = imageHeight;
