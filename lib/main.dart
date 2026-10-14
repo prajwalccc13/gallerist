@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallerist/screens/shell_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:gallerist/theme/app_theme.dart';
 
@@ -39,7 +40,7 @@ class GalleristApp extends StatelessWidget {
       theme: AppTheme.build(seed ?? AppTheme.fallbackSeed),
       themeAnimationDuration: const Duration(milliseconds: 900),
       themeAnimationCurve: Curves.easeInOutCubic,
-      home: TodayScreen(),
+      home: const ShellScreen(),
     );
   }
 }

@@ -21,6 +21,28 @@ class AppTheme {
         bodyColor: palette.ink,
         displayColor: palette.ink,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: palette.wall,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        height: 64,
+        indicatorColor: palette.accent.withValues(alpha: 0.12),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return GoogleFonts.workSans(
+            fontSize: 12,
+            fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+            color: selected ? palette.ink : palette.muted,
+          );
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            size: 22,
+            color: selected ? palette.ink : palette.muted,
+          );
+        }),
+      ),
       extensions: [palette],
       useMaterial3: true,
     );
