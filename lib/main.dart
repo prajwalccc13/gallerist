@@ -40,6 +40,7 @@ class GalleristApp extends StatelessWidget {
       theme: AppTheme.build(seed ?? AppTheme.fallbackSeed),
       themeAnimationDuration: const Duration(milliseconds: 900),
       themeAnimationCurve: Curves.easeInOutCubic,
+      scrollBehavior: const AppScrollBehavior(),
       home: const ShellScreen(),
     );
   }

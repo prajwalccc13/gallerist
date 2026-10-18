@@ -28,9 +28,9 @@ class TodayScreen extends StatelessWidget {
               message: controller.errorMessage ?? '',
               onRetry: controller.load,
             ),
-            LoadStatus.ready => _ArtworkView(
-              key: ValueKey(controller.artwork!.id),
-              artwork: controller.artwork!,
+            LoadStatus.ready => _DaysPager(
+              key: const ValueKey('ready'),
+              controller: controller,
             ),
           },
         ),
@@ -64,9 +64,10 @@ class _ErrorView extends StatelessWidget {
 }
 
 class _ArtworkView extends StatelessWidget {
-  const _ArtworkView({super.key, required this.artwork});
+  const _ArtworkView({super.key, required this.artwork, required this.date});
 
   final Artwork artwork;
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -108,28 +109,52 @@ class _ArtworkView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 48),
       children: [
-        const _Masthead(),
+        _Masthead(date: date),
         const SizedBox(height: 32),
         _FramedArtwork(artwork: artwork, maxHeight: maxImageHeight),
         const SizedBox(height: 32),
         ...(reduceMotion
-          ? details
-          : details
-            .animate(interval: 60.ms)
-            .fadeIn(duration: 500.ms, curve: Curves.easeOut)
-            .slideY(
-              begin: 0.08,
-              end: 0,
-              duration: 500.ms,
-              curve: Curves.easeOutCubic,
-            )),
+            ? details
+            : details
+                  .animate(interval: 60.ms)
+                  .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+                  .slideY(
+                    begin: 0.08,
+                    end: 0,
+                    duration: 500.ms,
+                    curve: Curves.easeOutCubic,
+                  )),
       ],
     );
   }
 }
 
+class _DaysPager extends StatelessWidget {
+  const _DaysPager({super.key, required this.controller});
+
+  final TodayController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final days = controller.days;
+
+    return PageView.builder(
+      reverse: true,
+      itemCount: days.length,
+      onPageChanged: controller.selectDay,
+      itemBuilder: (context, index) => _ArtworkView(
+        key: ValueKey(days[index].id),
+        artwork: days[index],
+        date: controller.dayAt(index),
+      ),
+    );
+  }
+}
+
 class _Masthead extends StatelessWidget {
-  const _Masthead();
+  const _Masthead({required this.date});
+
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +166,7 @@ class _Masthead extends StatelessWidget {
         Text('Gallerist', style: AppText.wordmark((palette))),
         const Spacer(),
         Text(
-          DateFormat('EEEE d MMMM').format(DateTime.now()),
+          DateFormat('EEEE d MMMM').format(date),
           style: AppText.date((palette)),
         ),
       ],
@@ -186,7 +211,7 @@ class _FramedArtwork extends StatelessWidget {
               label: 'View ${artwork.title} full screen',
               child: GestureDetector(
                 onTap: () =>
-                      Navigator.of(context).push(ViewerScreen.route(artwork)),
+                    Navigator.of(context).push(ViewerScreen.route(artwork)),
                 child: Hero(
                   tag: artwork.heroTag,
                   child: ClipRRect(
@@ -197,7 +222,8 @@ class _FramedArtwork extends StatelessWidget {
                       fadeInDuration: const Duration(milliseconds: 600),
                       fadeInCurve: Curves.easeOut,
                       placeholder: (context, url) => const SizedBox.shrink(),
-                      errorWidget: (context, url, error) => const SizedBox.shrink(),
+                      errorWidget: (context, url, error) =>
+                          const SizedBox.shrink(),
                     ),
                   ),
                 ),

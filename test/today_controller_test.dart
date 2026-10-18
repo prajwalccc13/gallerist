@@ -6,15 +6,19 @@ import 'fakes/fakes.dart';
 
 void main() {
   test('starts out loading', () {
-    final controller =
-        TodayController(FakeArtworkRepository(), FakeArtworkColors());
+    final controller = TodayController(
+      FakeArtworkRepository(),
+      FakeArtworkColors(),
+    );
     expect(controller.status, LoadStatus.loading);
     expect(controller.artwork, isNull);
   });
 
   test('shows the painting and its color once loaded', () async {
-    final controller =
-        TodayController(FakeArtworkRepository(), FakeArtworkColors());
+    final controller = TodayController(
+      FakeArtworkRepository(),
+      FakeArtworkColors(),
+    );
 
     await controller.load();
 
@@ -24,8 +28,10 @@ void main() {
   });
 
   test('shows the painting first, then its colors', () async {
-    final controller =
-        TodayController(FakeArtworkRepository(), FakeArtworkColors());
+    final controller = TodayController(
+      FakeArtworkRepository(),
+      FakeArtworkColors(),
+    );
     final seen = <String>[];
     controller.addListener(() {
       seen.add('${controller.status.name}:${controller.seedColor != null}');
@@ -37,8 +43,10 @@ void main() {
   });
 
   test('a failure shows an error, not an endless spinner', () async {
-    final controller =
-        TodayController(FailingArtworkRepository(), FakeArtworkColors());
+    final controller = TodayController(
+      FailingArtworkRepository(),
+      FakeArtworkColors(),
+    );
 
     await controller.load();
 
@@ -47,8 +55,10 @@ void main() {
   });
 
   test('"Try again" recovers after a failure', () async {
-    final controller =
-        TodayController(FlakyArtworkRepository(), FakeArtworkColors());
+    final controller = TodayController(
+      FlakyArtworkRepository(),
+      FakeArtworkColors(),
+    );
 
     await controller.load();
     expect(controller.status, LoadStatus.error);
@@ -56,5 +66,21 @@ void main() {
     await controller.load();
     expect(controller.status, LoadStatus.ready);
     expect(controller.errorMessage, isNull);
+  });
+
+  test('loads the last 30 days', () async {
+    final controller = TodayController(
+      FakeArtworkRepository(),
+      FakeArtworkColors(),
+    );
+
+    await controller.load();
+
+    expect(controller.days.length, TodayController.daysToShow);
+    expect(controller.selected, 0);
+    expect(
+      controller.dayAt(1).day,
+      controller.dayAt(0).subtract(const Duration(hours: 24)).day,
+    );
   });
 }
