@@ -44,6 +44,15 @@ class AppTheme {
           );
         }),
       ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: palette.ink,
+        contentTextStyle: GoogleFonts.workSans(
+          fontSize: 14,
+          color: palette.wall,
+        ),
+        actionTextColor: palette.wall,
+      ),
       extensions: [palette],
       useMaterial3: true,
     );

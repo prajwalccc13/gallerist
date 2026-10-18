@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gallerist/data/collection_repository.dart';
 import 'package:gallerist/screens/shell_screen.dart';
+import 'package:gallerist/state/collection_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:gallerist/theme/app_theme.dart';
 
@@ -15,11 +17,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => TodayController(
-        ClevelandArtworkRepository(ClevelandApi(), prefs),
-        ImageArtworkColors(),
-        )..load(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TodayController(
+            ClevelandArtworkRepository(ClevelandApi(), prefs),
+            ImageArtworkColors(),
+          )..load(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              CollectionController(LocalCollectionRepository(prefs))..load(),
+        ),
+      ],
       child: const GalleristApp(),
     ),
   );

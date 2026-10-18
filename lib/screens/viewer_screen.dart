@@ -6,16 +6,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gallerist/models/artwork.dart';
 
 class ViewerScreen extends StatelessWidget {
-  const ViewerScreen({super.key, required this.artwork});
+  const ViewerScreen({super.key, required this.artwork, required this.heroTag});
 
   final Artwork artwork;
+  final String heroTag;
 
-  static Route<void> route(Artwork artwork) {
+  static Route<void> route(Artwork artwork, {String? heroTag}) {
     return PageRouteBuilder<void>(
       transitionDuration: const Duration(milliseconds: 450),
       reverseTransitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          ViewerScreen(artwork: artwork),
+      pageBuilder: (context, animation, secondaryAnimation) => ViewerScreen(
+        artwork: artwork,
+        heroTag: heroTag ?? artwork.heroTag,
+      ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
           opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
@@ -41,7 +44,7 @@ class ViewerScreen extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: artwork.aspectRatio,
                     child: Hero(
-                      tag: artwork.heroTag,
+                      tag: heroTag,
                       child: CachedNetworkImage(
                         imageUrl: artwork.imageUrl,
                         fit: BoxFit.cover,

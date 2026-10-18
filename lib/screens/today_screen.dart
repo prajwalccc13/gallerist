@@ -8,6 +8,7 @@ import 'package:gallerist/theme/app_theme.dart';
 import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/state/today_controller.dart';
+import 'package:gallerist/state/collection_controller.dart';
 import 'package:gallerist/widgets/wall_label.dart';
 import 'package:gallerist/screens/viewer_screen.dart';
 
@@ -80,7 +81,14 @@ class _ArtworkView extends StatelessWidget {
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
 
     final details = <Widget>[
-      Text(artwork.title, style: AppText.title(palette)),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: Text(artwork.title, style: AppText.title(palette))),
+          const SizedBox(width: 8),
+          _SaveButton(artwork: artwork),
+        ],
+      ),
       const SizedBox(height: 16),
       if (artistName != null) Text(artistName, style: AppText.artist(palette)),
       const SizedBox(height: 32),
@@ -262,6 +270,36 @@ class _LoadingView extends StatelessWidget {
           const SizedBox(height: 12),
           Text('Finding today\'s painting', style: AppText.caption(palette)),
         ],
+      ),
+    );
+  }
+}
+
+
+class _SaveButton extends StatelessWidget {
+  const _SaveButton({required this.artwork});
+
+  final Artwork artwork;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final saved = context.select<CollectionController, bool>(
+      (collection) => collection.isSaved(artwork),
+    );
+
+    return IconButton(
+      tooltip: saved ? 'Remove from collection' : 'Save to collection',
+      onPressed: () => context.read<CollectionController>().toggle(artwork),
+      icon: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        transitionBuilder: (child, animation) =>
+            ScaleTransition(scale: animation, child: child),
+        child: Icon(
+          saved ? Icons.bookmark : Icons.bookmark_border,
+          key: ValueKey(saved),
+          color: saved ? palette.accent : palette.muted,
+        ),
       ),
     );
   }
