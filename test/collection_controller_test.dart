@@ -42,4 +42,34 @@ void main() {
 
     expect(collection.isSaved(testArtwork), isTrue);
   });
+
+    test('writing a note saves the painting too', () async {
+    final repository = InMemoryCollectionRepository();
+    final collection = CollectionController(repository);
+
+    await collection.saveNote(testArtwork, '  The red cape pulls my eye.  ');
+
+    expect(collection.noteFor(testArtwork), 'The red cape pulls my eye.');
+    expect(collection.isSaved(testArtwork), isTrue);
+    expect(repository.notes[testArtwork.id], 'The red cape pulls my eye.');
+  });
+
+  test('clearing a note deletes it', () async {
+    final collection = CollectionController(InMemoryCollectionRepository());
+
+    await collection.saveNote(testArtwork, 'First thoughts');
+    await collection.saveNote(testArtwork, '   ');
+
+    expect(collection.noteFor(testArtwork), isNull);
+  });
+
+  test('removing a painting keeps its note', () async {
+    final collection = CollectionController(InMemoryCollectionRepository());
+
+    await collection.saveNote(testArtwork, 'Worth remembering');
+    await collection.toggle(testArtwork);
+
+    expect(collection.isSaved(testArtwork), isFalse);
+    expect(collection.noteFor(testArtwork), 'Worth remembering');
+  });
 }

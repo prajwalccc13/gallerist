@@ -10,6 +10,7 @@ import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/state/today_controller.dart';
 import 'package:gallerist/state/collection_controller.dart';
 import 'package:gallerist/widgets/wall_label.dart';
+import 'package:gallerist/widgets/note_sheet.dart';
 import 'package:gallerist/screens/viewer_screen.dart';
 
 class TodayScreen extends StatelessWidget {
@@ -95,6 +96,8 @@ class _ArtworkView extends StatelessWidget {
       WallLabel(
         entries: {'Date': dateDisplay, 'Medium': artwork.techniqueDisplay},
       ),
+       const SizedBox(height: 16),
+      _NoteSection(artwork: artwork),
       if (description != null) ...[
         const SizedBox(height: 24),
         Text('About this work', style: AppText.sectionTitle(palette)),
@@ -301,6 +304,49 @@ class _SaveButton extends StatelessWidget {
           color: saved ? palette.accent : palette.muted,
         ),
       ),
+    );
+  }
+}
+
+
+class _NoteSection extends StatelessWidget {
+  const _NoteSection({required this.artwork});
+
+  final Artwork artwork;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final note = context.select<CollectionController, String?>(
+      (collection) => collection.noteFor(artwork),
+    );
+    final linkStyle = TextButton.styleFrom(
+      padding: EdgeInsets.zero,
+      minimumSize: const Size(0, 40),
+      alignment: Alignment.centerLeft,
+    );
+
+    if (note == null) {
+      return TextButton.icon(
+        onPressed: () => NoteSheet.show(context, artwork),
+        style: linkStyle,
+        icon: const Icon(Icons.edit_outlined, size: 18),
+        label: const Text('Write a note'),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Your note', style: AppText.sectionTitle(palette)),
+        const SizedBox(height: 8),
+        Text(note, style: AppText.note(palette)),
+        TextButton(
+          onPressed: () => NoteSheet.show(context, artwork),
+          style: linkStyle,
+          child: const Text('Edit note'),
+        ),
+      ],
     );
   }
 }

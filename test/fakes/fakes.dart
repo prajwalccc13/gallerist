@@ -5,10 +5,9 @@ import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/data/collection_repository.dart';
 
-
 const testArtwork = Artwork(
-  id: 1, 
-  title: 'Water Lilies', 
+  id: 1,
+  title: 'Water Lilies',
   imageUrl: 'https://example.com/water-lilies.jpg',
   artistDisplay: 'Claude Monet (French, 1840–1926)',
 );
@@ -52,10 +51,17 @@ const otherArtwork = Artwork(
 
 class InMemoryCollectionRepository implements CollectionRepository {
   List<Artwork> saved = [];
+  Map<int, String> notes = {};
 
   @override
   Future<List<Artwork>> load() async => saved;
 
   @override
   Future<void> save(List<Artwork> artworks) async => saved = artworks;
+
+  @override
+  Future<Map<int, String>> loadNotes() async => notes;
+
+  @override
+  Future<void> saveNotes(Map<int, String> newNotes) async => notes = newNotes;
 }

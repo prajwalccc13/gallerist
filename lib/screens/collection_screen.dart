@@ -9,6 +9,7 @@ import 'package:gallerist/state/collection_controller.dart';
 import 'package:gallerist/theme/app_theme.dart';
 import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/widgets/empty_state.dart';
+import 'package:gallerist/widgets/note_sheet.dart';
 
 class CollectionScreen extends StatelessWidget {
   const CollectionScreen({super.key});
@@ -22,7 +23,8 @@ class CollectionScreen extends StatelessWidget {
         child: artworks.isEmpty
             ? const EmptyState(
                 title: 'Your collection',
-                message: 'Save a painting you love, and it will wait for you '
+                message:
+                    'Save a painting you love, and it will wait for you '
                     'here, along with any notes you write about it.',
               )
             : _CollectionGrid(artworks: artworks),
@@ -89,11 +91,17 @@ class _CollectionTile extends StatelessWidget {
     final palette = context.palette;
     final heroTag = 'collection-${artwork.id}';
     final artistName = artwork.artistName;
-    final placeholder = ColoredBox(color: palette.muted.withValues(alpha: 0.12));
+    final note = context.select<CollectionController, String?>(
+      (collection) => collection.noteFor(artwork),
+    );
+    final placeholder = ColoredBox(
+      color: palette.muted.withValues(alpha: 0.12),
+    );
 
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(ViewerScreen.route(artwork, heroTag: heroTag)),
+      onTap: () =>
+          Navigator.of(context)
+              .push(ViewerScreen.route(artwork, heroTag: heroTag)),
       onLongPress: () => _remove(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,6 +135,20 @@ class _CollectionTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppText.caption(palette),
+            ),
+          if (note != null)
+            GestureDetector(
+              onTap: () => NoteSheet.show(context, artwork),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  '“$note”',
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.note(palette)
+                      .copyWith(fontSize: 15, height: 1.3),
+                ),
+              ),
             ),
         ],
       ),

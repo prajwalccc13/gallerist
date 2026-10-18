@@ -53,6 +53,20 @@ class AppTheme {
         ),
         actionTextColor: palette.wall,
       ),
+            bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: palette.wall,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        dragHandleColor: palette.muted.withValues(alpha: 0.4),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: palette.accent,
+        selectionColor: palette.accent.withValues(alpha: 0.25),
+        selectionHandleColor: palette.accent,
+      ),
       extensions: [palette],
       useMaterial3: true,
     );
@@ -114,6 +128,13 @@ class AppText {
 
   static TextStyle caption(ArtPalette p) =>
       GoogleFonts.workSans(fontSize: 12, height: 1.5, color: p.muted);
+
+  static TextStyle note(ArtPalette p) => GoogleFonts.cormorantGaramond(
+    fontSize: 20,
+    fontStyle: FontStyle.italic,
+    height: 1.4,
+    color: p.ink,
+  );
 }
 
 class AppScrollBehavior extends MaterialScrollBehavior {
