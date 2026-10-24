@@ -7,6 +7,7 @@ import 'package:gallerist/models/artwork.dart';
 
 class ClevelandApi {
   static const _host = 'openaccess-api.clevelandart.org';
+  static const _fields = 'id,title,creators,creation_date,images,technique,description,did_you_know';
 
 
   Future<Artwork> fetchArtwork(int id) async {
@@ -21,28 +22,53 @@ class ClevelandApi {
     return Artwork.fromJson(body['data']);
   }
 
-  Future<List<Artwork>> fetchHighlights() async {
-    final url = Uri.https(
-      _host, 
-      '/api/artworks/', 
-      {
-        'type': 'Painting',
-        'has_image': '1',
-        'cc0': '1',
-        'highlight': '1',
-        'limit': '200',
-        'fields': 'id,title,creators,creation_date,images,technique,description,did_you_know',
-      }
-    );
+  // Future<List<Artwork>> fetchHighlights() async {
+  //   final url = Uri.https(
+  //     _host, 
+  //     '/api/artworks/', 
+  //     {
+  //       'type': 'Painting',
+  //       'has_image': '1',
+  //       'cc0': '1',
+  //       'highlight': '1',
+  //       'limit': '200',
+  //       'fields': 'id,title,creators,creation_date,images,technique,description,did_you_know',
+  //     }
+  //   );
+
+  //   final body = await _getJson(url);
+  //   final data = body['data'] as List<dynamic>;
+
+  //   return data 
+  //     .whereType<Map<String, dynamic>>()
+  //     .where((json) => json['images'] != null)
+  //     .map((json) => Artwork.fromJson(json))
+  //     .toList();
+  // }
+
+  Future<List<Artwork>> fetchHighlights() =>
+      _fetchPaintings({'highlight': '1', 'limit': '200'});
+
+  Future<List<Artwork>> search(String query) =>
+      _fetchPaintings({'q': query, 'limit': '60'});
+
+  Future<List<Artwork>> _fetchPaintings(Map<String, String> extra) async {
+    final url = Uri.https(_host, '/api/artworks/', {
+      'type': 'Painting',
+      'has_image': '1',
+      'cc0': '1',
+      'fields': _fields,
+      ...extra,
+    });
 
     final body = await _getJson(url);
     final data = body['data'] as List<dynamic>;
 
-    return data 
-      .whereType<Map<String, dynamic>>()
-      .where((json) => json['images'] != null)
-      .map((json) => Artwork.fromJson(json))
-      .toList();
+    return data
+        .whereType<Map<String, dynamic>>()
+        .where((json) => json['images'] != null)
+        .map((json) => Artwork.fromJson(json))
+        .toList();
   }
 
 

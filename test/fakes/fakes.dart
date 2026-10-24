@@ -17,11 +17,21 @@ const testColor = Color(0xFF336699);
 class FakeArtworkRepository implements ArtworkRepository {
   @override
   Future<Artwork> artworkForDay(DateTime day) async => testArtwork;
+
+  @override
+  Future<List<Artwork>> search(String query) async => [
+    testArtwork,
+    otherArtwork,
+  ];
 }
 
 class FailingArtworkRepository implements ArtworkRepository {
   @override
   Future<Artwork> artworkForDay(DateTime day) async =>
+      throw Exception('No internet');
+
+  @override
+  Future<List<Artwork>> search(String query) async =>
       throw Exception('No internet');
 }
 
@@ -35,6 +45,17 @@ class FlakyArtworkRepository implements ArtworkRepository {
       throw Exception('No internet');
     }
     return testArtwork;
+  }
+
+  @override
+  Future<List<Artwork>> search(String query) async => const [];
+}
+
+class SlowArtworkRepository extends FakeArtworkRepository {
+  @override
+  Future<List<Artwork>> search(String query) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    return [testArtwork];
   }
 }
 

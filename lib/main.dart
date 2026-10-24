@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/data/collection_repository.dart';
 import 'package:gallerist/screens/shell_screen.dart';
 import 'package:gallerist/state/collection_controller.dart';
@@ -11,18 +12,19 @@ import 'package:gallerist/data/artwork_colors.dart';
 import 'package:gallerist/state/today_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+  final repository = ClevelandArtworkRepository(ClevelandApi(), prefs);
+   final colors = ImageArtworkColors();
+
   runApp(
     MultiProvider(
       providers: [
+        Provider<ArtworkRepository>.value(value: repository),
+        Provider<ArtworkColors>.value(value: colors),
         ChangeNotifierProvider(
-          create: (_) => TodayController(
-            ClevelandArtworkRepository(ClevelandApi(), prefs),
-            ImageArtworkColors(),
-          )..load(),
+          create: (_) => TodayController(repository, colors)..load(),
         ),
         ChangeNotifierProvider(
           create: (_) =>
@@ -42,9 +44,9 @@ class GalleristApp extends StatelessWidget {
     final seed = context.select<TodayController, Color?>(
       (controller) => controller.seedColor,
     );
-    
+
     return MaterialApp(
-      title:'Gallerist',
+      title: 'Gallerist',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(seed ?? AppTheme.fallbackSeed),
       themeAnimationDuration: const Duration(milliseconds: 900),

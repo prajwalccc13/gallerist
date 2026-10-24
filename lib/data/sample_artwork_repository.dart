@@ -1,7 +1,6 @@
 import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/models/artwork.dart';
 
-
 class SampleArtworkRepository implements ArtworkRepository {
   @override
   Future<Artwork> artworkForDay(DateTime day) async {
@@ -15,5 +14,10 @@ class SampleArtworkRepository implements ArtworkRepository {
       artistDisplay: 'Claude Monet (French, 1840-1926)',
       dateDisplay: 'c. 1868-73',
     );
+  }
+
+  @override
+  Future<List<Artwork>> search(String query) async {
+    return [await artworkForDay(DateTime.now())];
   }
 }

@@ -12,6 +12,7 @@ class ClevelandArtworkRepository extends ArtworkRepository {
   final ClevelandApi _api;
   final SharedPreferences _prefs;
   List<Artwork>? _paintings;
+  final Map<String, List<Artwork>> _searches = {};
 
   static const _paintingsKey = 'paintings_v4';
   static const _savedAtKey = 'paintings_saved_at_v4';
@@ -21,6 +22,16 @@ class ClevelandArtworkRepository extends ArtworkRepository {
   Future<Artwork> artworkForDay(DateTime day) async {
     final paintings = await _loadPaintings();
     return paintings[indexForDay(day, paintings.length)];
+  }
+
+  @override
+  Future<List<Artwork>> search(String query) async {
+    final cached = _searches[query];
+    if (cached != null) return cached;
+
+    final results = await _api.search(query);
+    _searches[query] = results;
+    return results;
   }
 
   Future<List<Artwork>> _loadPaintings() async {

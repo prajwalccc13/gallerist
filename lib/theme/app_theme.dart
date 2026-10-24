@@ -53,7 +53,7 @@ class AppTheme {
         ),
         actionTextColor: palette.wall,
       ),
-            bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: palette.wall,
         surfaceTintColor: Colors.transparent,
         showDragHandle: true,
@@ -66,6 +66,13 @@ class AppTheme {
         cursorColor: palette.accent,
         selectionColor: palette.accent.withValues(alpha: 0.25),
         selectionHandleColor: palette.accent,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: palette.wall,
+        foregroundColor: palette.ink,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       extensions: [palette],
       useMaterial3: true,
