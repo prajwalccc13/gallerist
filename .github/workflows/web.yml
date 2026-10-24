@@ -1,0 +1,49 @@
+name: Web demo
+
+# Redeploy on every push to main, so the demo always matches the code.
+# workflow_dispatch adds a "Run workflow" button in the Actions tab.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Publishing to Pages needs these permissions.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If you push twice quickly, cancel the older deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+
+      # The site will live at your-username.github.io/gallerist/,
+      # not at the root, so the app must know its base path.
+      - run: flutter build web --release --base-href /gallerist/
+
+      # Package build/web for GitHub Pages.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build # only runs after build succeeds
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

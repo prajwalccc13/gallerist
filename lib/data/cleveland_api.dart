@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:gallerist/models/artwork.dart';
 
@@ -70,7 +71,17 @@ class ClevelandApi {
   }
 
   Future<Map<String, dynamic>> _getJson(Uri url) async {
-    final response = await http.get(url).timeout(const Duration(seconds: 15));
+    // On the web, ask for a URL the phone app never uses. The museum's cache
+    // ignores the Origin header, so a copy stored for the phone app (without
+    // CORS permission) would be given to browsers too, and they'd block it.
+    // Browsers always send Origin, so every copy cached for these URLs has
+    // the CORS header.
+    final requestUrl = kIsWeb
+        ? url.replace(
+            queryParameters: {...url.queryParameters, 'client': 'web'},
+          )
+        : url;
+    final response = await http.get(requestUrl).timeout(const Duration(seconds: 15));
 
     if (response.statusCode != 200) {
       throw Exception('The museum answered ${response.statusCode}');

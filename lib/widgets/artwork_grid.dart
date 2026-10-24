@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gallerist/screens/artwork_screen.dart';
+import 'package:gallerist/widgets/painting_image.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gallerist/models/artwork.dart';
@@ -88,11 +88,9 @@ class ArtworkTile extends StatelessWidget {
               tag: heroTag,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
-                child: CachedNetworkImage(
-                  imageUrl: artwork.imageUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => placeholder,
-                  errorWidget: (context, url, error) => placeholder,
+                child: PaintingImage(
+                  url: artwork.imageUrl,
+                  placeholder: placeholder,
                 ),
               ),
             ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:gallerist/data/artwork_repository.dart';
 import 'package:gallerist/data/collection_repository.dart';
 import 'package:gallerist/screens/shell_screen.dart';
@@ -16,7 +18,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final repository = ClevelandArtworkRepository(ClevelandApi(), prefs);
-  final colors = ImageArtworkColors();
+  final ArtworkColors colors =
+    kIsWeb ? const NoArtworkColors() : ImageArtworkColors();
 
   runApp(
     MultiProvider(

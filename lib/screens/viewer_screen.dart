@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallerist/widgets/painting_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gallerist/models/artwork.dart';
@@ -43,8 +43,8 @@ class ViewerScreen extends StatelessWidget {
                     aspectRatio: artwork.aspectRatio,
                     child: Hero(
                       tag: heroTag,
-                      child: CachedNetworkImage(
-                        imageUrl: artwork.imageUrl,
+                      child: PaintingImage(
+                        url: artwork.imageUrl,
                         fit: BoxFit.cover,
                       ),
                     ),

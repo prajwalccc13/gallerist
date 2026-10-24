@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gallerist/widgets/painting_image.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gallerist/models/artwork.dart';
@@ -144,14 +144,9 @@ class _FramedArtwork extends StatelessWidget {
                   tag: heroTag,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(2),
-                    child: CachedNetworkImage(
-                      imageUrl: artwork.imageUrl,
-                      fit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 600),
-                      fadeInCurve: Curves.easeOut,
-                      placeholder: (context, url) => const SizedBox.shrink(),
-                      errorWidget: (context, url, error) =>
-                          const SizedBox.shrink(),
+                    child: PaintingImage(
+                      url: artwork.imageUrl,
+                      placeholder: const SizedBox.shrink(),
                     ),
                   ),
                 ),
