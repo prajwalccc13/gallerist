@@ -10,11 +10,12 @@ class AppTheme {
 
   static const fallbackSeed = Color(0xFF5B6B7A);
 
-  static ThemeData build(Color seed) {
-    final palette = ArtPalette.fromSeed(seed);
+  static ThemeData build(Color seed,{Brightness brightness = Brightness.light}) {
+    final palette = ArtPalette.fromSeed(seed, brightness);
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: palette.accent,
+        brightness: brightness,
         surface: palette.wall,
       ),
       scaffoldBackgroundColor: palette.wall,

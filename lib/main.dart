@@ -48,10 +48,15 @@ class GalleristApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gallerist',
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const AppScrollBehavior(),
+      themeMode: ThemeMode.system,
       theme: AppTheme.build(seed ?? AppTheme.fallbackSeed),
+      darkTheme: AppTheme.build(
+        seed ?? AppTheme.fallbackSeed,
+        brightness: Brightness.dark,
+      ),
       themeAnimationDuration: const Duration(milliseconds: 900),
       themeAnimationCurve: Curves.easeInOutCubic,
-      scrollBehavior: const AppScrollBehavior(),
       home: const ShellScreen(),
     );
   }

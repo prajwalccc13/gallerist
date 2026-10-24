@@ -43,7 +43,10 @@ class _ArtworkScreenState extends State<ArtworkScreen> {
   Widget build(BuildContext context) {
 
     return AnimatedTheme(
-      data: AppTheme.build(_seed),
+      data: AppTheme.build(
+        _seed,
+        brightness: MediaQuery.platformBrightnessOf(context),
+      ),
       duration: const Duration(milliseconds: 900),
       curve: Curves.easeInOutCubic,
       child: Scaffold(
