@@ -19,6 +19,9 @@ Gallerist is a calm, offline-first Flutter app that shows a different public-dom
   </tr>
 </table>
 
+
+**[Download the latest APK](https://github.com/prajwalccc13/gallerist/releases/latest)**
+
 ## Features
 
 - **A painting a day.** The same painting for everyone on a given day, picked from the museum's highlights, with no server of my own.
