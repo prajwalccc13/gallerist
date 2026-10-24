@@ -1,0 +1,63 @@
+name: Release
+
+# Run only when a tag starting with "v" is pushed, like v1.0.0.
+on:
+  push:
+    tags: ['v*']
+
+# Creating a release writes to the repository, so the workflow needs
+# permission. By default workflows can only read.
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Building Android apps needs Java (Gradle runs on it).
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # Never release something that fails its tests.
+      - run: flutter test
+
+      # Rebuild the two files you keep out of git, from the secrets.
+      # `${{ secrets.X }}` is replaced by GitHub with the secret's value.
+      # The heredoc (<<EOF ... EOF) writes several lines into a file,
+      # like Python's open(...).write("""...""").
+      - name: Restore the signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEYSTORE_PASSWORD
+          keyAlias=upload
+          storeFile=upload-keystore.jks
+          EOF
+
+      # Build the APK, then give it a clear name like gallerist-v1.0.0.apk.
+      # `github.ref_name` is the tag that started this run.
+      - run: flutter build apk --release
+      - run: cp build/app/outputs/flutter-apk/app-release.apk gallerist-${{ github.ref_name }}.apk
+
+      # Create the release on GitHub and attach the APK.
+      # generate_release_notes lists the commits since the last release.
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: gallerist-${{ github.ref_name }}.apk
+          generate_release_notes: true

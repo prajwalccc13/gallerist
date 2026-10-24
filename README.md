@@ -1,5 +1,7 @@
 # Gallerist
 
+![CI](https://github.com/prajwalccc13/gallerist/actions/workflows/ci.yml/badge.svg)
+
 **One painting a day, in a room that takes on its colors.**
 
 Gallerist is a calm, offline-first Flutter app that shows a different public-domain masterpiece from the Cleveland Museum of Art each day. The whole interface re-tints itself to match the painting you're looking at.
