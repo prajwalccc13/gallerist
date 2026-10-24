@@ -20,6 +20,8 @@ class ArtworkGrid extends StatelessWidget {
     this.onLongPress,
   });
 
+  static const double edge = 8;
+
   final List<Artwork> artworks;
   final String heroPrefix;
   final ArtworkAction? onLongPress;
@@ -29,9 +31,10 @@ class ArtworkGrid extends StatelessWidget {
     final longPress = onLongPress;
 
     return MasonryGridView.count(
+      padding: const EdgeInsets.fromLTRB(edge, 8, edge, 64),
       crossAxisCount: 2,
-      mainAxisSpacing: 24,
-      crossAxisSpacing: 16,
+      mainAxisSpacing: 8, // between rows in a column
+      crossAxisSpacing: 8, // between the two columns
       itemCount: artworks.length,
       itemBuilder: (context, index) {
         final artwork = artworks[index];
