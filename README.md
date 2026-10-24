@@ -15,7 +15,7 @@ Gallerist is a calm, offline-first Flutter app that shows a different public-dom
     <td><img src="docs/screenshots/collection.png" width="200" alt="Saved paintings in a masonry grid"></td>
     <td><img src="docs/screenshots/room.png" width="200" alt="Browsing the Snow room"></td>
   </tr>
-</table>W
+</table>
 
 ## Features
 
