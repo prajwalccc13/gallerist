@@ -39,15 +39,14 @@ class ArtworkGrid extends StatelessWidget {
           key: ValueKey(artwork.id),
           artwork: artwork,
           heroTag: '$heroPrefix-${artwork.id}',
-          onLongPress:
-              longPress == null ? null : () => longPress(context, artwork),
+          onLongPress: longPress == null
+              ? null
+              : () => longPress(context, artwork),
         );
       },
     );
-
   }
 }
-
 
 class ArtworkTile extends StatelessWidget {
   const ArtworkTile({
@@ -68,11 +67,14 @@ class ArtworkTile extends StatelessWidget {
     final note = context.select<CollectionController, String?>(
       (collection) => collection.noteFor(artwork),
     );
-    final placeholder = ColoredBox(color: palette.muted.withValues(alpha: 0.12));
+    final placeholder = ColoredBox(
+      color: palette.muted.withValues(alpha: 0.12),
+    );
 
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .push(ArtworkScreen.route(artwork, heroTag: heroTag)),
+      onTap: () =>
+          Navigator.of(context)
+              .push(ArtworkScreen.route(artwork, heroTag: heroTag)),
       onLongPress: onLongPress,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

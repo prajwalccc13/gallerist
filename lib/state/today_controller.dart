@@ -52,7 +52,8 @@ class TodayController extends ChangeNotifier {
       _seedColor = await _colors.seedFor(_days[0]);
     } catch (e) {
       debugPrint('Loading failed: $e');
-      _errorMessage = 'Couldn\'t reach the museum. '
+      _errorMessage =
+          'Couldn\'t reach the museum. '
           'Check your connection and try again.';
       _status = LoadStatus.error;
     }

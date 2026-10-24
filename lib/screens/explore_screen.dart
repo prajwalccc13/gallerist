@@ -17,7 +17,10 @@ class ExploreScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
           children: [
-            Text('Explore', style: AppText.title(palette).copyWith(fontSize: 34)),
+            Text(
+              'Explore',
+              style: AppText.title(palette).copyWith(fontSize: 34),
+            ),
             const SizedBox(height: 4),
             Text('Wander the museum by theme.', style: AppText.date(palette)),
             const SizedBox(height: 24),

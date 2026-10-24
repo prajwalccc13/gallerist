@@ -16,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final repository = ClevelandArtworkRepository(ClevelandApi(), prefs);
-   final colors = ImageArtworkColors();
+  final colors = ImageArtworkColors();
 
   runApp(
     MultiProvider(

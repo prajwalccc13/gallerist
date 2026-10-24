@@ -47,10 +47,7 @@ class ArtworkDetails extends StatelessWidget {
       if (artistName != null) Text(artistName, style: AppText.artist(palette)),
       const SizedBox(height: 32),
       WallLabel(
-        entries: {
-          'Date': dateDisplay,
-          'Medium': artwork.techniqueDisplay,
-        },
+        entries: {'Date': dateDisplay, 'Medium': artwork.techniqueDisplay},
       ),
       const SizedBox(height: 16),
       _NoteSection(artwork: artwork),
@@ -86,14 +83,14 @@ class ArtworkDetails extends StatelessWidget {
         ...(reduceMotion
             ? details
             : details
-                .animate(interval: 60.ms)
-                .fadeIn(duration: 500.ms, curve: Curves.easeOut)
-                .slideY(
-                  begin: 0.08,
-                  end: 0,
-                  duration: 500.ms,
-                  curve: Curves.easeOutCubic,
-                )),
+                  .animate(interval: 60.ms)
+                  .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+                  .slideY(
+                    begin: 0.08,
+                    end: 0,
+                    duration: 500.ms,
+                    curve: Curves.easeOutCubic,
+                  )),
       ],
     );
   }
@@ -140,8 +137,9 @@ class _FramedArtwork extends StatelessWidget {
               button: true,
               label: 'View ${artwork.title} full screen',
               child: GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .push(ViewerScreen.route(artwork, heroTag: heroTag)),
+                onTap: () =>
+                    Navigator.of(context)
+                        .push(ViewerScreen.route(artwork, heroTag: heroTag)),
                 child: Hero(
                   tag: heroTag,
                   child: ClipRRect(

@@ -26,8 +26,9 @@ class NoteSheet extends StatefulWidget {
 }
 
 class _NoteSheetState extends State<NoteSheet> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.initialText);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialText,
+  );
 
   @override
   void dispose() {
@@ -36,7 +37,10 @@ class _NoteSheetState extends State<NoteSheet> {
   }
 
   void _save() {
-    context.read<CollectionController>().saveNote(widget.artwork, _controller.text);
+    context.read<CollectionController>().saveNote(
+      widget.artwork,
+      _controller.text,
+    );
     Navigator.of(context).pop();
   }
 

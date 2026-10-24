@@ -5,7 +5,6 @@ import 'package:gallerist/models/artwork.dart';
 import 'package:gallerist/models/room.dart';
 import 'package:gallerist/state/today_controller.dart' show LoadStatus;
 
-
 class RoomController extends ChangeNotifier {
   RoomController(this._repository, this.room);
 

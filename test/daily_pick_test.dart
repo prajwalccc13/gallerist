@@ -6,14 +6,14 @@ void main() {
   int pick(DateTime day) => ClevelandArtworkRepository.indexForDay(day, 62);
 
   test('gives the same painting all day', () {
-    expect(pick(DateTime(2026, 10, 11, 7, 0)),
-        pick(DateTime(2026, 10, 11, 23, 59)));
+    expect(
+      pick(DateTime(2026, 10, 11, 7, 0)),
+      pick(DateTime(2026, 10, 11, 23, 59)),
+    );
   });
 
   test('shows every painting once before repeating', () {
-    final seen = {
-      for (var i = 0; i < 62; i++) pick(DateTime(2026, 1, 1 + i)),
-    };
+    final seen = {for (var i = 0; i < 62; i++) pick(DateTime(2026, 1, 1 + i))};
     expect(seen.length, 62);
   });
 

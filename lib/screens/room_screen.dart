@@ -33,39 +33,41 @@ class RoomScreen extends StatelessWidget {
       appBar: AppBar(),
       body: switch (controller.status) {
         LoadStatus.loading => Center(
-            child: Text('Opening the room…', style: AppText.caption(palette)),
-          ),
+          child: Text('Opening the room…', style: AppText.caption(palette)),
+        ),
         LoadStatus.error => _RoomError(onRetry: controller.load),
-        LoadStatus.ready => controller.artworks.isEmpty
-            ? EmptyState(
-                title: room.title,
-                message: 'This room is empty for now. Try another theme.',
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          room.title,
-                          style: AppText.title(palette).copyWith(fontSize: 34),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(room.blurb, style: AppText.detail(palette)),
-                      ],
+        LoadStatus.ready =>
+          controller.artworks.isEmpty
+              ? EmptyState(
+                  title: room.title,
+                  message: 'This room is empty for now. Try another theme.',
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            room.title,
+                            style: AppText.title(palette)
+                                .copyWith(fontSize: 34),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(room.blurb, style: AppText.detail(palette)),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: ArtworkGrid(
-                      artworks: controller.artworks,
-                      heroPrefix: 'room-${room.query}',
+                    Expanded(
+                      child: ArtworkGrid(
+                        artworks: controller.artworks,
+                        heroPrefix: 'room-${room.query}',
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
       },
     );
   }

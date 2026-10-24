@@ -10,7 +10,10 @@ class AppTheme {
 
   static const fallbackSeed = Color(0xFF5B6B7A);
 
-  static ThemeData build(Color seed,{Brightness brightness = Brightness.light}) {
+  static ThemeData build(
+    Color seed, {
+    Brightness brightness = Brightness.light,
+  }) {
     final palette = ArtPalette.fromSeed(seed, brightness);
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(

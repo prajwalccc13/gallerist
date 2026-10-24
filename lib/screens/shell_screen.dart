@@ -15,11 +15,7 @@ class ShellScreen extends StatefulWidget {
 class _ShellScreenState extends State<ShellScreen> {
   int _index = 0;
 
-  static const _screens =[
-    TodayScreen(),
-    CollectionScreen(),
-    ExploreScreen(),
-  ];
+  static const _screens = [TodayScreen(), CollectionScreen(), ExploreScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +24,7 @@ class _ShellScreenState extends State<ShellScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        body: IndexedStack(
-          index: _index,
-          children: _screens,
-        ),
+        body: IndexedStack(index: _index, children: _screens),
         bottomNavigationBar: NavigationBar(
           selectedIndex: _index,
           onDestinationSelected: (index) => setState(() => _index = index),

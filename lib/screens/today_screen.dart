@@ -8,7 +8,6 @@ import 'package:gallerist/theme/app_theme.dart';
 import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/state/today_controller.dart';
 
-
 class TodayScreen extends StatelessWidget {
   const TodayScreen({super.key});
 

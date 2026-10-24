@@ -22,7 +22,8 @@ class CollectionScreen extends StatelessWidget {
         body: SafeArea(
           child: EmptyState(
             title: 'Your collection',
-            message: 'Save a painting you love, and it will wait for you '
+            message:
+                'Save a painting you love, and it will wait for you '
                 'here, along with any notes you write about it.',
           ),
         ),

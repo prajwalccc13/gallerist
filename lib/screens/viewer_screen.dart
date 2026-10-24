@@ -15,10 +15,8 @@ class ViewerScreen extends StatelessWidget {
     return PageRouteBuilder<void>(
       transitionDuration: const Duration(milliseconds: 450),
       reverseTransitionDuration: const Duration(milliseconds: 350),
-      pageBuilder: (context, animation, secondaryAnimation) => ViewerScreen(
-        artwork: artwork,
-        heroTag: heroTag ?? artwork.heroTag,
-      ),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ViewerScreen(artwork: artwork, heroTag: heroTag ?? artwork.heroTag),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
           opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
@@ -58,9 +56,7 @@ class ViewerScreen extends StatelessWidget {
               left: 0,
               right: 0,
               bottom: 0,
-              child: IgnorePointer(
-                child: _Caption(artwork: artwork),
-              ),
+              child: IgnorePointer(child: _Caption(artwork: artwork)),
             ),
             Positioned(
               top: 0,

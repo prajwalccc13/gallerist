@@ -8,7 +8,11 @@ import 'package:gallerist/theme/app_theme.dart';
 import 'package:gallerist/widgets/artwork_details.dart';
 
 class ArtworkScreen extends StatefulWidget {
-  const ArtworkScreen({super.key, required this.artwork, required this.heroTag});
+  const ArtworkScreen({
+    super.key,
+    required this.artwork,
+    required this.heroTag,
+  });
 
   final Artwork artwork;
   final String heroTag;
@@ -41,7 +45,6 @@ class _ArtworkScreenState extends State<ArtworkScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return AnimatedTheme(
       data: AppTheme.build(
         _seed,

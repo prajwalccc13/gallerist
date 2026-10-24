@@ -31,7 +31,10 @@ void main() {
     await collection.toggle(testArtwork);
     await collection.toggle(otherArtwork);
 
-    expect(collection.artworks.map((a) => a.id), [otherArtwork.id, testArtwork.id]);
+    expect(collection.artworks.map((a) => a.id), [
+      otherArtwork.id,
+      testArtwork.id,
+    ]);
   });
 
   test('loads what was saved before', () async {
@@ -43,7 +46,7 @@ void main() {
     expect(collection.isSaved(testArtwork), isTrue);
   });
 
-    test('writing a note saves the painting too', () async {
+  test('writing a note saves the painting too', () async {
     final repository = InMemoryCollectionRepository();
     final collection = CollectionController(repository);
 
