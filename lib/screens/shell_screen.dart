@@ -14,6 +14,7 @@ class ShellScreen extends StatefulWidget {
 
 class _ShellScreenState extends State<ShellScreen> {
   int _index = 0;
+  final _visited = <int>{0};
 
   static const _screens = [TodayScreen(), CollectionScreen(), ExploreScreen()];
 
@@ -24,10 +25,19 @@ class _ShellScreenState extends State<ShellScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        body: IndexedStack(index: _index, children: _screens),
+        body: IndexedStack(
+          index: _index, 
+          children: [
+            for (var i = 0; i < _screens.length; i++)
+      _visited.contains(i) ? _screens[i] : const SizedBox.shrink(),
+          ]
+        ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: _index,
-          onDestinationSelected: (index) => setState(() => _index = index),
+          onDestinationSelected: (index) => setState(() {
+            _index = index;
+            _visited.add(index);
+          }),
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.filter_frames_outlined),

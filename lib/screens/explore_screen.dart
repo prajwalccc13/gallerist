@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:gallerist/models/room.dart';
 import 'package:gallerist/screens/room_screen.dart';
 import 'package:gallerist/theme/app_theme.dart';
 import 'package:gallerist/theme/art_palette.dart';
 import 'package:gallerist/widgets/room_motif_painter.dart';
+
+import 'package:gallerist/data/artwork_repository.dart';
+import 'package:gallerist/models/artwork.dart';
+import 'package:gallerist/widgets/painting_image.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -47,9 +52,7 @@ class ExploreScreen extends StatelessWidget {
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 childAspectRatio: 3 / 4, // width ÷ height
-                children: [
-                  for (final room in Room.all) _RoomTile(room: room),
-                ],
+                children: [for (final room in Room.all) _RoomTile(room: room)],
               ),
             ),
           ],
@@ -59,20 +62,37 @@ class ExploreScreen extends StatelessWidget {
   }
 }
 
-class _RoomTile extends StatelessWidget {
+class _RoomTile extends StatefulWidget {
   const _RoomTile({required this.room});
 
   final Room room;
 
   @override
+  State<_RoomTile> createState() => _RoomTileState();
+}
+
+class _RoomTileState extends State<_RoomTile> {
+  late final Future<Artwork?> _cover = _findCover();
+
+  Future<Artwork?> _findCover() async {
+    try {
+      final artworks = await context.read<ArtworkRepository>().search(
+        widget.room.query,
+      );
+      return artworks.isEmpty ? null : artworks.first;
+    } catch (error) {
+      // Offline, or the search failed: return no painting, and the tile keeps
+      // its drawing. The room screen has its own error view if they tap it.
+      return null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final room = widget.room;
 
-    // Material gives the tile its background and shape, and lets InkWell
-    // draw its ripple inside the rounded corners (clipBehavior).
     return Material(
-      // A whisper of ink on the wall: darker in light mode, lighter in dark
-      // mode, because ink is the opposite of the wall in both.
       color: palette.ink.withValues(alpha: 0.04),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       clipBehavior: Clip.antiAlias,
@@ -85,12 +105,24 @@ class _RoomTile extends StatelessWidget {
             children: [
               // The drawing takes all the space the text doesn't need.
               Expanded(
-                child: CustomPaint(
-                  painter: RoomMotifPainter(
-                    motif: room.motif,
-                    color: palette.accent.withValues(alpha: 0.7),
-                  ),
-                  child: const SizedBox.expand(),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CustomPaint(
+                      painter: RoomMotifPainter(
+                        motif: widget.room.motif,
+                        color: palette.accent.withValues(alpha: 0.7),
+                      ),
+                    ),
+                     FutureBuilder<Artwork?>(
+                      future: _cover,
+                      builder: (context, snapshot) {
+                        final cover = snapshot.data;
+                        if (cover == null) return const SizedBox.shrink();
+                        return _CoverDetail(artwork: cover);
+                      },
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 12),
@@ -100,7 +132,7 @@ class _RoomTile extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                room.blurb,
+                widget.room.blurb,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: AppText.caption(palette),
@@ -108,6 +140,27 @@ class _RoomTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+
+class _CoverDetail extends StatelessWidget {
+  const _CoverDetail({required this.artwork});
+
+  final Artwork artwork;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(2),
+      // Scaling up by 1.5 inside the clip shows the middle two-thirds of the
+      // painting: a detail, not a thumbnail. Brushstrokes become visible.
+      child: Transform.scale(
+        scale: 1.5,
+        child: PaintingImage(url: artwork.imageUrl),
       ),
     );
   }
